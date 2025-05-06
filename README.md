@@ -1,6 +1,10 @@
 # LLM Project Proposal Writing Benchmark (LLM-PPWB)
 
 <img src=".\favicon.png" alt="favicon" style="zoom:50%;" />
+<div align="middle">
+  <a href="README.md">English</a> | <a href="README_zh.md">中文</a>
+</div>
+
 
 ## Project Introduction
 
