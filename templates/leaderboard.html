@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型排行榜</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Times New Roman', Serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2ff;
+        }
+        .nav-bar {
+            width: 100%;
+            background-color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 0 #9d8aff;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #6b4cff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background-color: #f0f2ff;
+            transform: translate(2px, 2px);
+        }
+        .nav-links a.active {
+            background-color: #9d8aff;
+            color: white;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 0 #9d8aff;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            position: relative;
+        }
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #f0f2ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background-color: #9d8aff;
+            color: white;
+        }
+        #heatmapContainer {
+            width: 100%;
+            height: 400%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-links">
+            <a href="/">首页</a>
+            <a href="/judge">评价</a>
+            <a href="/leaderboard" class="active">排行榜</a>
+            <a href="/about">关于我们</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>模型排行榜</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('elo')">ELO评分</div>
+            <div class="tab" onclick="switchTab('winrate')">胜率</div>
+            <div class="tab" onclick="switchTab('matrix')">对位矩阵</div>
+        </div>
+        <div class="chart-container">
+            <canvas id="ratingChart"></canvas>
+            <div id="heatmapContainer" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentChart = null;
+        let heatmapInstance = null;
+
+        async function fetchData(type) {
+            try {
+                let endpoint = '';
+                switch(type) {
+                    case 'elo':
+                        endpoint = '/get_rating';
+                        break;
+                    case 'winrate':
+                        endpoint = '/get_winrates';
+                        break;
+                    case 'matrix':
+                        endpoint = '/get_matrix';
+                        break;
+                }
+                
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+
+                const ctx = document.getElementById('ratingChart');
+                const heatmapContainer = document.getElementById('heatmapContainer');
+                
+                if (type === 'matrix') {
+                    // 隐藏Chart.js容器，显示热力图容器
+                    ctx.style.display = 'none';
+                    heatmapContainer.style.display = 'block';
+                    
+                    // 设置热力图容器的大小
+                    heatmapContainer.style.width = '300px';
+                    heatmapContainer.style.height = '300px';
+                    heatmapContainer.style.margin = '0 auto';
+                    
+                    // 处理对位矩阵数据
+                    const models = Object.keys(data);
+                    const matrixData = [];
+                    
+                    models.forEach(model => {
+                        const row = [];
+                        models.forEach(opponent => {
+                            row.push(data[model][opponent]);
+                        });
+                        matrixData.push(row);
+                    });
+
+                    // 创建热力图数据
+                    let max = 0;
+                    for (const row of matrixData) {
+                        for (const value of row) {
+                            if (value !== undefined && value > max) {
+                                max = value;
+                            }
+                        }
+                    }
+                    const heatmapData = {
+                        max: max,
+                        min: 0,
+                        data: []
+                    };
+                    console.log('heatmapData:', heatmapData);
+                    // 将所有undefined值设置为0
+                    matrixData.forEach((row, i) => {
+                        row.forEach((value, j) => {
+                            if (value === undefined) {
+                                row[j] = 0;
+                            }
+                        });
+                    });
+
+                    matrixData.forEach((row, i) => {
+                        row.forEach((value, j) => {
+                            heatmapData.data.push({
+                                x: Math.floor((Math.floor(j)+0.5)/(models.length)*300),
+                                y: Math.floor((Math.floor(i)+0.5)/(models.length)*300),
+                                value: value
+                            });
+                        });
+                    });
+                    
+                    // matrixData.forEach((row, i) => {
+                    //     row.forEach((value, j) => {
+                    //         heatmapData.data.push({
+                    //             x: Math.floor(Math.floor(j)*300),
+                    //             y: Math.floor(Math.floor(i)*300),
+                    //             value: value
+                    //         });
+                    //     });
+                    // });
+
+                    console.log('matrixData:', matrixData);
+                    console.log('models:', models.length);
+                    console.log('heatmapData:', heatmapData.data);
+                    // 初始化热力图
+                    if (heatmapInstance) {
+                        heatmapInstance.setData(heatmapData);
+                    } else {
+                        heatmapInstance = h337.create({
+                            container: heatmapContainer,
+                            xField: 'x',
+                            yField: 'y',
+                            valueField: 'value',
+                            radius: 300/(models.length)/2,
+                            maxOpacity: 0.8,
+                            minOpacity: 0.3,
+                            blur: 0.75,
+                            gradient: {
+                                '.5': '#9d8aff',
+                                '.8': '#6b4cff',
+                                '.95': '#4a2fff'
+                            },
+                            // shape: 'square'  // 添加这一行来使热力图的点变为正方形
+                        });
+                        console.log('heatmapInstance:', heatmapInstance);
+                    }
+
+                    // 添加坐标轴标签
+                    const labels = models;
+                    const labelContainer = document.createElement('div');
+                    labelContainer.style.position = 'absolute';
+                    labelContainer.style.top = '0';
+                    labelContainer.style.left = '0';
+                    labelContainer.style.width = '100%';
+                    labelContainer.style.height = '100%';
+                    labelContainer.style.pointerEvents = 'none';
+
+                    // 添加X轴标签
+                    labels.forEach((label, i) => {
+                        const xLabel = document.createElement('div');
+                        xLabel.textContent = label;
+                        xLabel.style.position = 'absolute';
+                        xLabel.style.bottom = '-25px';
+                        xLabel.style.left = `${(i + 0.5) * (100 / labels.length)}%`;
+                        xLabel.style.transform = 'translateX(-50%) rotate(-45deg)';
+                        labelContainer.appendChild(xLabel);
+                    });
+
+                    // 添加Y轴标签
+                    labels.forEach((label, i) => {
+                        const yLabel = document.createElement('div');
+                        yLabel.textContent = label;
+                        yLabel.style.position = 'absolute';
+                        yLabel.style.left = '-100px';
+                        yLabel.style.top = `${(i + 0.5) * (100 / labels.length)}%`;
+                        yLabel.style.transform = 'translateY(-50%)';
+                        labelContainer.appendChild(yLabel);
+                    });
+
+                    heatmapContainer.appendChild(labelContainer);
+                    heatmapInstance.setData(heatmapData);
+
+                } else {
+                    // 显示Chart.js容器，隐藏热力图容器
+                    ctx.style.display = 'block';
+                    heatmapContainer.style.display = 'none';
+                    
+                    // 处理ELO评分和胜率数据
+                    const labels = data.map(item => item.model);
+                    const values = data.map(item => type === 'elo' ? item.rating : item.rate);
+                    
+                    // 将数据按值排序
+                    const sortedData = labels.map((label, index) => ({
+                        label,
+                        value: values[index]
+                    })).sort((a, b) => b.value - a.value);
+                    
+                    currentChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedData.map(item => item.label),
+                            datasets: [{
+                                label: type === 'elo' ? 'ELO评分' : '胜率(%)',
+                                data: sortedData.map(item => item.value),
+                                backgroundColor: '#9d8aff',
+                                borderColor: '#6b4cff',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: type === 'elo' ? '模型评分排行榜' : '模型胜率排行榜',
+                                    font: {
+                                        size: 20,
+                                        family: "'Comic Neue', cursive"
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: type === 'winrate',
+                                    title: {
+                                        display: true,
+                                        text: type === 'elo' ? 'ELO评分' : '胜率(%)',
+                                        font: {
+                                            size: 16,
+                                            family: "'Comic Neue', cursive"
+                                        }
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: '模型名称',
+                                        font: {
+                                            size: 16,
+                                            family: "'Comic Neue', cursive"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('获取数据失败:', error);
+            }
+        }
+
+        function switchTab(type) {
+            // 更新标签样式
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 获取新数据
+            fetchData(type);
+        }
+
+        // 页面加载时获取ELO评分数据
+        fetchData('elo');
+    </script>
+</body>
+</html>
