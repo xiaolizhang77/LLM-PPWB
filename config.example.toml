@@ -1,0 +1,34 @@
+["LLM query generate"]
+api-key=
+api="https://api.v3.cm/v1/"
+model="deepseek-v3"
+
+["deepseek-v3 setting"]
+api-key=
+api="https://api.v3.cm/v1/"
+model="deepseek-v3"
+
+["gpt-4o setting"]
+api-key=
+api="https://api.v3.cm/v1/"
+model="gpt-4o"
+
+["deepseek-r1 setting"]
+api-key=
+api="https://api.v3.cm/v1/"
+model="deepseek-r1"
+
+["qwen-max setting"]
+api-key=
+api="https://api.v3.cm/v1/"
+model="qwen-max-latest"
+
+["qwen3-reason setting"]
+api-key=
+api="https://dashscope.aliyuncs.com/compatible-mode/v1"
+model="qwen3-235b-a22b"
+
+["Doubao-1.5-pro setting"]
+api-key=
+api="https://aihubmix.com/v1"
+model="Doubao-1.5-pro-32k"
