@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型评测平台</title>
+    <!-- 添加 marked.js 和 MathJax 用于 Markdown 和数学公式渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 配置 MathJax 以支持行内公式 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 保留原有样式 */
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+        
+        /* 原有样式保持不变 */
+        body {
+            font-family: 'Times New Roman', Serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2ff;
+        }
+        .nav-bar {
+            width: 100%;
+            background-color: white;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 0 #9d8aff;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #6b4cff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            background-color: #f0f2ff;
+            transform: translate(2px, 2px);
+        }
+        .nav-links a.active {
+            background-color: #9d8aff;
+            color: white;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 80px;
+        }
+        .context-box {
+            width: 100%;
+            padding: 20px;
+            border: 3px solid #9d8aff;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 5px 5px 0 #9d8aff;
+        }
+        .models-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .model-box {
+            width: 45%;
+            padding: 20px;
+            border: 3px solid #8a9dff;
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 5px 5px 0 #8a9dff;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            font-size: 16px;
+            font-weight: bold;
+            border: 3px solid #9d8aff;
+            border-radius: 10px;
+            background-color: white;
+            color: #6b4cff;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 #9d8aff;
+        }
+        button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #9d8aff;
+        }
+        .model-name {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #6b4cff;
+            font-size: 1.2em;
+        }
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #6b4cff;
+            font-size: 1.2em;
+        }
+        .project-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #6b4cff;
+            font-size: 1.3em;
+        }
+        #getQuestion {
+            background-color: #9d8aff;
+            color: white;
+            border-color: #6b4cff;
+            box-shadow: 3px 3px 0 #6b4cff;
+            margin-bottom: 30px;
+        }
+        #getQuestionML {
+            background-color: #9d8aff;
+            color: white;
+            border-color: #6b4cff;
+            box-shadow: 3px 3px 0 #6b4cff;
+            margin-bottom: 30px;
+        }
+        #getQuestionDL {
+            background-color: #9d8aff;
+            color: white;
+            border-color: #6b4cff;
+            box-shadow: 3px 3px 0 #6b4cff;
+            margin-bottom: 30px;
+        }
+        #getQuestionAI {
+            background-color: #9d8aff;
+            color: white;
+            border-color: #6b4cff;
+            box-shadow: 3px 3px 0 #6b4cff;
+            margin-bottom: 30px;
+        }
+        #choiceButtons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .hidden {
+            display: none;
+        }
+        /* 添加 Markdown 样式 */
+        .markdown-content {
+            line-height: 1.6;
+        }
+        .markdown-content p {
+            margin: 0 0 1em 0;
+        }
+        .markdown-content code {
+            background-color: #f0f2ff;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .markdown-content pre {
+            background-color: #f0f2ff;
+            padding: 1em;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        /* 添加图片样式限制 */
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1em auto;
+        }
+        /* 修改数学公式样式 */
+        .markdown-content .MathJax {
+            font-size: 1.1em;
+        }
+        .markdown-content .MathJax_Display {
+            margin: 1em 0;
+        }
+        /* 调整 Markdown 标题大小 */
+        .markdown-content h1 { font-size: 1.25em; }
+        .markdown-content h2 { font-size: 1.2em; }
+        .markdown-content h3 { font-size: 1.15em; }
+        .markdown-content h4 { font-size: 1.1em; }
+        .markdown-content h5 { font-size: 1.05em; }
+        .markdown-content h6 { font-size: 1em; }
+         /* Add new style for word requirement */
+        .word-requirement {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #6b4cff;
+            font-size: 1.2em;
+        }
+        
+        /* Add new style for character count */
+        .char-count {
+            text-align: left;
+            vertical-align: bottom;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #6b4cff;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-links">
+            <a href="/">首页</a>
+            <a href="/judge" class="active">评价</a>
+            <a href="/leaderboard">排行榜</a>
+            <a href="/about">关于我们</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="buttons" id="getQuestionButtons">
+            <button id="getQuestion">获取新问题</button>
+            <button id="getQuestionML">机器学习</button>
+            <button id="getQuestionDL">深度学习</button>
+            <button id="getQuestionAI">人工智能</button>
+        </div>
+
+        <div class="context-box">
+            <div id="projectTitle" class="project-title"></div>
+            <div class="content-title">项目摘要:</div>
+            <div id="summary" class="markdown-content"></div>
+            <div class="content-title">以下内容摘自段落:</div>
+            <div id="title_from" class="markdown-content"></div>
+            <div class="content-title">提示词:</div>
+            <div id="prompt" class="markdown-content"></div>
+            <div id="wordRequirement" class="word-requirement"></div>
+        </div>
+        
+        <div class="context-box">
+            <div class="content-title">上文:</div>
+            <div id="contextBefore" class="markdown-content"></div>
+        </div>
+
+        <div class="models-container">
+            <div class="model-box">
+                <div id="modelA" class="model-name"></div>
+                <div id="answerA" class="markdown-content"></div>
+                <div id="charCountA" class="char-count"></div>
+            </div>
+            <div class="model-box">
+                <div id="modelB" class="model-name"></div>
+                <div id="answerB" class="markdown-content"></div>
+                <div id="charCountB" class="char-count"></div>
+            </div>
+        </div>
+
+        <div class="context-box">
+            <div class="content-title">下文:</div>
+            <div id="contextAfter" class="markdown-content"></div>
+        </div>
+
+    </div>
+
+    <div class="buttons" id="choiceButtons">
+        <button id="leftBetter">左边更好</button>
+        <button id="abstain">弃权</button>
+        <button id="rightBetter">右边更好</button>
+    </div>
+
+    <!-- Script section remains unchanged -->
+    <script>
+        // 配置 marked 选项
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            sanitize: false
+        });
+
+        let currentQuestion = null;
+        let currentAnswers = null;
+        let currentModelIds = null;
+
+        document.getElementById('getQuestion').addEventListener('click', () => getNewQuestion("ALL"));
+        document.getElementById('getQuestionML').addEventListener('click', () => getNewQuestion("ML"));
+        document.getElementById('getQuestionDL').addEventListener('click', () => getNewQuestion("DL"));
+        document.getElementById('getQuestionAI').addEventListener('click', () => getNewQuestion("AI"));
+        document.getElementById('leftBetter').addEventListener('click', () => submitChoice(0));
+        document.getElementById('abstain').addEventListener('click', () => submitChoice(-1));
+        document.getElementById('rightBetter').addEventListener('click', () => submitChoice(1));
+
+        async function getNewQuestion(domain) {
+            try {
+                const response = await fetch(`/get_question?domain=${domain}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                currentQuestion = data.question;
+                currentAnswers = data.answers;
+                currentModelToken = data.token;
+                
+                document.getElementById('modelA').textContent = '模型 A';
+                document.getElementById('modelB').textContent = '模型 B';
+                
+                // 使用 marked 渲染 Markdown 内容
+                console.log(data.question.context_before);
+                console.log(marked.parse(data.question.context_before))
+                function processMarkdown(text) {
+                    return text.replace(/([^\n])(#+)/g, '$1\n$2');
+                }
+                
+                document.getElementById('projectTitle').textContent = data.title;
+                // 渲染摘要
+                document.getElementById('summary').innerHTML = marked.parse(processMarkdown(data.summary));
+                
+                // 计算并显示字数要求
+                const gtLength = data.question['char_count']['ground_truth'] || 0;
+                const minLength = Math.floor(0.8 * gtLength / 10) * 10;
+                const maxLength = Math.floor(1.2 * gtLength / 10) * 10;
+                document.getElementById('wordRequirement').textContent = 
+                    `字数要求: ${minLength}-${maxLength}个字符（包括标点符号，换行符等）`;
+                
+                // 渲染其他内容
+                document.getElementById('title_from').innerHTML = marked.parse(processMarkdown(data.question.title));
+                document.getElementById('contextBefore').innerHTML = marked.parse(processMarkdown(data.question.context_before));
+                document.getElementById('answerA').innerHTML = marked.parse(processMarkdown(data.answers[0].answer));
+                document.getElementById('answerB').innerHTML = marked.parse(processMarkdown(data.answers[1].answer));
+                document.getElementById('contextAfter').innerHTML = marked.parse(processMarkdown(data.question.context_after));
+                document.getElementById('prompt').innerHTML = marked.parse(processMarkdown(data.question.query));
+
+                // 计算并显示字符数
+                document.getElementById('charCountA').textContent = 
+                    `字符数: ${data.answers[0].answer.length}`;
+                document.getElementById('charCountB').textContent = 
+                    `字符数: ${data.answers[1].answer.length}`;
+
+                // 触发 MathJax 重新渲染
+                MathJax.typesetPromise();
+
+                document.getElementById('choiceButtons').classList.remove('hidden');
+            } catch (error) {
+                console.error('获取问题失败:', error);
+            }
+        }
+
+        async function submitChoice(choice) {
+            if (!currentQuestion) return;
+
+            try {
+                const response = await fetch(`/submit_choice`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        choice: choice,
+                        question_id: currentQuestion.question_id,
+                        token: currentModelToken,
+                        answers: currentAnswers,
+                        question: currentQuestion
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById('modelA').textContent = result.model_A;
+                document.getElementById('modelB').textContent = result.model_B;
+                
+                document.getElementById('choiceButtons').classList.add('hidden');
+            } catch (error) {
+                console.error('提交选择失败:', error);
+            }
+        }
+
+        getNewQuestion("ALL");
+    </script>
+</body>
+</html>
