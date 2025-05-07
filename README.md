@@ -39,6 +39,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 ### Evaluation Features
 
 1. Click "Start Evaluation" to enter the evaluation page, where you can select your area of expertise
+
   ![image-20250507161231922](./image/image-20250507161231922.png)
 
 2. Read the project background, context, and responses from two models
