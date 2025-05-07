@@ -1,6 +1,6 @@
 # LLM Project Proposal Writing Benchmark (LLM-PPWB)
 
-<img src=".\favicon.png" alt="favicon" style="zoom:50%;" />
+<img src="./favicon.png" alt="favicon" style="zoom:50%;" />
 <div align="middle">
   <a href="README.md">English</a> | <a href="README_zh.md">中文</a>
 </div>
@@ -39,6 +39,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 ### Evaluation Features
 
 1. Click "Start Evaluation" to enter the evaluation page, where you can select your area of expertise
+<<<<<<< Updated upstream
 2. Read the project background, context, and responses from two models
 3. Choose the model response you think is better
 4. View the anonymous large model names
@@ -49,6 +50,39 @@ We aim to establish an objective model evaluation system by collecting a large a
 1. Click "Leaderboard" in the navigation bar to enter the leaderboard page
 2. Select your preferred ranking method and data
 
+=======
+
+   ![image-20250507161231922](./image/image-20250507161231922.png)
+
+2. Read the project background, context, and responses from two models
+
+   ![image-20250507161345573](./image/image-20250507161345573.png)
+
+   ![image-20250507161431498](./image/image-20250507161431498.png)
+
+3. Choose the model response you think is better
+
+   ![image-20250507161431498](./image/2025-05-07-161512.png)
+
+4. View the anonymous large model names
+
+   ![](./image/2025-05-07-161725.png)
+
+5. Click "Get New Question" or the field name button to get a new evaluation
+
+   ![](./image/2025-05-07-162001.png)
+
+### Leaderboard Features
+
+1. Click "Leaderboard" in the navigation bar to enter the leaderboard page
+
+   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162102.png)
+
+2. Select your preferred ranking method and data
+
+   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162217.png)
+
+>>>>>>> Stashed changes
 ## Update Log
 
 [2025.05.05]🎯📢PPWB officially launched: [LLM Project Proposal Writing Benchmark](http://8.140.232.135:54321/).
