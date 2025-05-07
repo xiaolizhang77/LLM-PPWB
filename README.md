@@ -39,20 +39,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 ### Evaluation Features
 
 1. Click "Start Evaluation" to enter the evaluation page, where you can select your area of expertise
-<<<<<<< Updated upstream
-2. Read the project background, context, and responses from two models
-3. Choose the model response you think is better
-4. View the anonymous large model names
-5. Click "Get New Question" or the field name button to get a new evaluation
-
-### Leaderboard Features
-
-1. Click "Leaderboard" in the navigation bar to enter the leaderboard page
-2. Select your preferred ranking method and data
-
-=======
-
-   ![image-20250507161231922](./image/image-20250507161231922.png)
+  ![image-20250507161231922](./image/image-20250507161231922.png)
 
 2. Read the project background, context, and responses from two models
 
@@ -82,7 +69,6 @@ We aim to establish an objective model evaluation system by collecting a large a
 
    ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162217.png)
 
->>>>>>> Stashed changes
 ## Update Log
 
 [2025.05.05]🎯📢PPWB officially launched: [LLM Project Proposal Writing Benchmark](http://8.140.232.135:54321/).
