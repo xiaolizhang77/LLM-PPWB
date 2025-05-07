@@ -39,15 +39,36 @@ We aim to establish an objective model evaluation system by collecting a large a
 ### Evaluation Features
 
 1. Click "Start Evaluation" to enter the evaluation page, where you can select your area of expertise
+
+   ![image-20250507161231922](.\image\image-20250507161231922.png)
+
 2. Read the project background, context, and responses from two models
+
+   ![image-20250507161345573](.\image\image-20250507161345573.png)
+
+   ![image-20250507161431498](.\image\image-20250507161431498.png)
+
 3. Choose the model response you think is better
+
+   ![image-20250507161431498](.\image\屏幕截图 2025-05-07 161512.png)
+
 4. View the anonymous large model names
+
+   ![](.\image\屏幕截图 2025-05-07 161725.png)
+
 5. Click "Get New Question" or the field name button to get a new evaluation
+
+   ![](.\image\屏幕截图 2025-05-07 162001.png)
 
 ### Leaderboard Features
 
 1. Click "Leaderboard" in the navigation bar to enter the leaderboard page
+
+   ![](C:\Users\98750\Desktop\LLM-PPWB\image\屏幕截图 2025-05-07 162102.png)
+
 2. Select your preferred ranking method and data
+
+   ![](C:\Users\98750\Desktop\LLM-PPWB\image\屏幕截图 2025-05-07 162217.png)
 
 ## Update Log
 
