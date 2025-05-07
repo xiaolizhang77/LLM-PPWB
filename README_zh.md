@@ -1,6 +1,6 @@
 # LLM项目申请书写作基准测试 (LLM-PPWB)
 
-<img src=".\favicon.png" alt="favicon" style="zoom:50%;" />
+<img src="./favicon.png" alt="favicon" style="zoom:50%;" />
 <div align="middle">
   <a href="README.md">English</a> | <a href="README_zh.md">中文</a>
 </div>
@@ -39,35 +39,35 @@
 
 1. 点击"开始评价"进入评价页面，可选自己擅长的领域
 
-   ![image-20250507161231922](.\image\image-20250507161231922.png)
+![image-20250507161231922](./image/image-20250507161231922.png)
 
 2. 阅读项目背景、文章上下文和两个模型的回答
 
-   ![image-20250507161345573](.\image\image-20250507161345573.png)
+   ![image-20250507161345573](./image/image-20250507161345573.png)
 
-   ![image-20250507161431498](.\image\image-20250507161431498.png)
+   ![image-20250507161431498](./image/image-20250507161431498.png)
 
 3. 选择您认为更好的模型回答
 
-   ![image-20250507161431498](.\image\屏幕截图 2025-05-07 161512.png)
+   ![image-20250507161431498](./image/2025-05-07-161512.png)
 
 4. 查看匿名大模型名称
 
-   ![](.\image\屏幕截图 2025-05-07 161725.png)
+   ![](./image/2025-05-07-161725.png)
 
 5. 点击"获取新问题"或领域名称按钮获取新的评测
 
-   ![](.\image\屏幕截图 2025-05-07 162001.png)
+   ![](./image/2025-05-07-162001.png)
 
 ### 排行榜功能
 
 1. 点击导航栏"排行榜"进入排行榜页面
 
-   ![](C:\Users\98750\Desktop\LLM-PPWB\image\屏幕截图 2025-05-07 162102.png)
+   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162102.png)
 
 2. 选择你想看的排行方式和数据
 
-   ![](C:\Users\98750\Desktop\LLM-PPWB\image\屏幕截图 2025-05-07 162217.png)
+   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162217.png)
 
 ## 更新日志
 
