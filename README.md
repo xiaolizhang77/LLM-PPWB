@@ -40,7 +40,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 
 1. Click "Start Evaluation" to enter the evaluation page, where you can select your area of expertise
 
-  ![image-20250507161231922](./image/image-20250507161231922.png)
+   ![image-20250507161231922](./image/image-20250507161231922.png)
 
 2. Read the project background, context, and responses from two models
 
@@ -64,11 +64,11 @@ We aim to establish an objective model evaluation system by collecting a large a
 
 1. Click "Leaderboard" in the navigation bar to enter the leaderboard page
 
-   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162102.png)
+   ![](./image/2025-05-07-162102.png)
 
 2. Select your preferred ranking method and data
 
-   ![](C:/Users/98750/Desktop/LLM-PPWB/image/2025-05-07-162217.png)
+   ![](./image/2025-05-07-162217.png)
 
 ## Update Log
 
