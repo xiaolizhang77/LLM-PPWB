@@ -34,7 +34,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 
 ### Benchmark Website Link
 
-[LLM Project Proposal Writing Benchmark](http://8.140.232.135:54321/)
+[LLM Project Proposal Writing Benchmark](https://www.ppwb.asia/)
 
 ### Evaluation Features
 
@@ -72,7 +72,7 @@ We aim to establish an objective model evaluation system by collecting a large a
 
 ## Update Log
 
-[2025.05.05]🎯📢PPWB officially launched: [LLM Project Proposal Writing Benchmark](http://8.140.232.135:54321/).
+[2025.05.05]🎯📢PPWB officially launched: [LLM Project Proposal Writing Benchmark](https://www.ppwb.asia/).
 
 [2025.05.01]🎯📢Added Qwen3-reason and Doubao-1.5-pro test models.
 
